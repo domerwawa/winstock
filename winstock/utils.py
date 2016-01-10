@@ -9,6 +9,7 @@ import sys
 import configparser
 import sqlite3
 
+#this method maybe no good enough
 def getResourceFilePath(resFile):
     for syspath in sys.path:
         resourceFilePath = os.path.abspath(syspath + resFile)
@@ -21,7 +22,8 @@ class PropertiesUtils(object):
         self.conf = configparser.ConfigParser()
         
     def readResourceFile(self, resFile):
-        self.conf.read(getResourceFilePath(resFile))
+        #self.conf.read(getResourceFilePath(resFile))
+        self.conf.read(os.path.realpath(resFile))
 
     def getPropertiesValue(self, groupName, keyName):
         return self.conf[groupName][keyName]

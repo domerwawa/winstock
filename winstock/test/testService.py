@@ -15,7 +15,7 @@ class TestService(unittest.TestCase):
     def setUp(self):
         #get connection
         propUtils = PropertiesUtils()
-        propUtils.readResourceFile("//resources//db.properties")
+        propUtils.readResourceFile("..//..//resources//db.properties")
         dbFile = propUtils.getPropertiesValue("sqlite3", "database_file")
         dbUtils = Sqlite3DbUtils(dbFile)
         self.conn = dbUtils.getConnection()
