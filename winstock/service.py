@@ -11,16 +11,20 @@ class StockInfoService(object):
         self.conn = conn
     
     def importStockInfo(self, stockInfoList):
-        for stockInfo in stockInfoList:
-            print(stockInfo.stockCode)
-            count = self.stockInfoDao.getCountByKey(stockInfo.stockCode)
-            print(count)
-            if count == 0:
-                print("insert")
-                self.stockInfoDao.insert(stockInfo)
-            else:
-                print("update")
-                self.stockInfoDao.update(stockInfo)
+        try:
+            for stockInfo in stockInfoList:
+                print(stockInfo.stockCode)
+                count = self.stockInfoDao.getCountByKey(stockInfo.stockCode)
+                print(count)
+                if count == 0:
+                    print("insert")
+                    self.stockInfoDao.insert(stockInfo)
+                else:
+                    print("update")
+                    self.stockInfoDao.update(stockInfo)
+        except Exception as ex:
+            self.conn.rollback()
+            
         self.conn.commit()
         
     def updateStockInfo(self, stockInfo):

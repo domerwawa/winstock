@@ -4,15 +4,21 @@ Created on 2016年1月7日
 @author: Administrator
 '''
 import unittest
-from winstock.utils import PropertiesUtils
-from winstock.utils import Sqlite3DbUtils
+import os
+from winstock.utils import PropertiesUtils, Sqlite3DbUtils
 from winstock.service import StockInfoService
 from winstock.model import StockInfo
+import logging
+import logging.config
 
 class TestService(unittest.TestCase):
-
-
+     
     def setUp(self):
+        #get logger
+        logging.config.fileConfig(fname = os.path.realpath("..//..//resources//pylogconfig.ini"))
+        
+        self.logger = logging.getLogger("winstock.test.testService")
+        
         #get connection
         propUtils = PropertiesUtils()
         propUtils.readResourceFile("..//..//resources//db.properties")
@@ -27,6 +33,7 @@ class TestService(unittest.TestCase):
 
 
     def testStockInfoService(self):
+        self.logger.info("testStockInfoService start")
         stockInfo1 = StockInfo()
         stockInfo1.stockCode = "111111"
         stockInfo1.stockName = "远光软件"
@@ -61,6 +68,8 @@ class TestService(unittest.TestCase):
         
         self.stockInfoService.deleteStockInfoByKey("111111")
         self.stockInfoService.deleteStockInfoByKey("222222")
+        
+        self.logger.info("testStockInfoService end")
         
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
