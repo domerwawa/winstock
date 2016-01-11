@@ -37,7 +37,8 @@ class DatabaseUtils(object):
     
 class Sqlite3DbUtils(DatabaseUtils):
     def __init__(self, dbFile):
-        self.conn = sqlite3.connect(getResourceFilePath(dbFile))
+        #self.conn = sqlite3.connect(getResourceFilePath(dbFile))
+        self.conn = sqlite3.connect(os.path.realpath(dbFile))
         
     def getConnection(self):
         return self.conn

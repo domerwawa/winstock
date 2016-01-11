@@ -4,28 +4,31 @@ Created on 2016年1月7日
 @author: Administrator
 '''
 from winstock.dao import StockInfoDao
+import logging
+import logging.config
 
 class StockInfoService(object):
     def __init__(self, conn):
+        self.logger = logging.getLogger("winstock.service.StockInfoService")
         self.stockInfoDao = StockInfoDao(conn)
         self.conn = conn
     
     def importStockInfo(self, stockInfoList):
+        self.logger.info("StockInfoService.importStockInfo start")
         try:
             for stockInfo in stockInfoList:
-                print(stockInfo.stockCode)
+                
                 count = self.stockInfoDao.getCountByKey(stockInfo.stockCode)
-                print(count)
+                
                 if count == 0:
-                    print("insert")
                     self.stockInfoDao.insert(stockInfo)
                 else:
-                    print("update")
                     self.stockInfoDao.update(stockInfo)
         except Exception as ex:
             self.conn.rollback()
             
         self.conn.commit()
+        self.logger.info("StockInfoService.importStockInfo end")
         
     def updateStockInfo(self, stockInfo):
         self.stockInfoDao.update(stockInfo)
