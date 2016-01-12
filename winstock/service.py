@@ -21,10 +21,13 @@ class StockInfoService(object):
                 count = self.stockInfoDao.getCountByKey(stockInfo.stockCode)
                 
                 if count == 0:
+                    self.logger.info("insert")
                     self.stockInfoDao.insert(stockInfo)
                 else:
+                    self.logger.info("update")
                     self.stockInfoDao.update(stockInfo)
         except Exception as ex:
+            self.logger.error(ex)
             self.conn.rollback()
             
         self.conn.commit()

@@ -3,7 +3,6 @@ CREATE TABLE stock_info
 (
   stock_code character(6) NOT NULL,
   stock_name character varying(50),
-  star_level Integer,
   --所属行业
   industrial_category character(100),
   --总市值

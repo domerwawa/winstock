@@ -8,6 +8,7 @@ import os
 import sys
 import configparser
 import sqlite3
+import csv
 
 #this method maybe no good enough
 def getResourceFilePath(resFile):
@@ -42,3 +43,17 @@ class Sqlite3DbUtils(DatabaseUtils):
         
     def getConnection(self):
         return self.conn
+
+class CsvFileUtils(object):
+    def __init__(self):
+        pass
+    
+    def readCsvFile(self, csvFileName):
+        dataList = []
+        with open(csvFileName, newline='') as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            for row in spamreader:
+                dataList.append(row)
+            
+        return dataList
+    

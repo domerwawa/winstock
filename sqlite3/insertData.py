@@ -5,6 +5,7 @@ Created on 2015年12月25日
 '''
 
 import sqlite3
+from datetime import datetime
 
 conn = sqlite3.connect('winstock.db')
 c = conn.cursor()

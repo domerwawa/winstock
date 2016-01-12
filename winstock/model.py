@@ -11,6 +11,8 @@ class StockInfo(object):
     totalMarketValue = None
     generalCapital = None
     circulationStock = None
+    insertTime = None
+    updateTime = None
     
     def __init__(self):
         self.stockCode = ""
@@ -20,3 +22,4 @@ class StockInfo(object):
         self.generalCapital = 0
         self.circulationStock = 0
     
+    #need add get set

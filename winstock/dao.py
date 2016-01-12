@@ -6,6 +6,7 @@ Created on 2016年1月5日
 from winstock.model import StockInfo
 from winstock.utils import Sqlite3DbUtils
 from winstock.utils import PropertiesUtils
+from datetime import datetime
 
 class StockInfoDao(object):
     '''
@@ -23,14 +24,18 @@ class StockInfoDao(object):
                         industrial_category,
                         total_market_value,
                         general_capital,
-                        circulation_stock) values (?, ?, ?, ?, ?, ?)
+                        circulation_stock,
+                        insert_time,
+                        update_time) values (?, ?, ?, ?, ?, ?, ? ,?)
                         ''', 
                         [stockInfo.stockCode,
                         stockInfo.stockName,
                         stockInfo.industrialCategory,
                         stockInfo.totalMarketValue,
                         stockInfo.generalCapital,
-                        stockInfo.circulationStock]
+                        stockInfo.circulationStock,
+                        datetime.now(),
+                        datetime.now()]
                        )
     
     def update(self, stockInfo):
@@ -39,13 +44,15 @@ class StockInfoDao(object):
                         industrial_category = ?,
                         total_market_value = ?,
                         general_capital = ?,
-                        circulation_stock = ?
+                        circulation_stock = ?,
+                        update_time = ?
                         where stock_code = ? ''', 
                         [stockInfo.stockName,
                          stockInfo.industrialCategory,
                          stockInfo.totalMarketValue,
                          stockInfo.generalCapital,
                          stockInfo.circulationStock,
+                         datetime.now(),
                          stockInfo.stockCode]
                         )
     
