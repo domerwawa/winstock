@@ -14,14 +14,16 @@ import logging.config
 class TestService(unittest.TestCase):
      
     def setUp(self):
+        
+        os.chdir("..//")
         #get logger
-        logging.config.fileConfig(fname = os.path.realpath("..//..//resources//pylogconfig.ini"))
+        logging.config.fileConfig(fname = os.path.realpath("..//resources//pylogconfig.ini"))
         
         self.logger = logging.getLogger("winstock.test.testService")
         
         #get connection
         propUtils = PropertiesUtils()
-        propUtils.readResourceFile("..//..//resources//db.properties")
+        propUtils.readResourceFile("..//resources//db.properties")
         dbFile = propUtils.getPropertiesValue("sqlite3", "database_file")
         dbUtils = Sqlite3DbUtils(dbFile)
         self.conn = dbUtils.getConnection()
@@ -35,32 +37,32 @@ class TestService(unittest.TestCase):
     def testStockInfoService(self):
         self.logger.info("testStockInfoService start")
         stockInfo1 = StockInfo()
-        stockInfo1.stockCode = "111111"
-        stockInfo1.stockName = "远光软件"
-        stockInfo1.industrialCategory = "计算机软件"
-        stockInfo1.totalMarketValue = 341223
-        stockInfo1.generalCapital = 421213
-        stockInfo1.circulationStock = 5232
+        stockInfo1.setStockCode("111111")
+        stockInfo1.setStockName("远光软件")
+        stockInfo1.setIndustrialCategory("计算机软件")
+        stockInfo1.setTotalMarketValue(341223)
+        stockInfo1.setGeneralCapital(421213)
+        stockInfo1.setCirculationStock(5232)
         
         stockInfo2 = StockInfo()
-        stockInfo2.stockCode = "222222"
-        stockInfo2.stockName = "科大讯飞"
-        stockInfo2.industrialCategory = "计算机软件"
-        stockInfo2.totalMarketValue = 5224
-        stockInfo2.generalCapital = 2522
-        stockInfo2.circulationStock = 562
+        stockInfo2.setStockCode("222222")
+        stockInfo2.setStockName("科大讯飞")
+        stockInfo2.setIndustrialCategory("计算机软件")
+        stockInfo2.setTotalMarketValue(5224)
+        stockInfo2.setGeneralCapital(2522)
+        stockInfo2.setCirculationStock(562)
         
         stockInfoList = []
         stockInfoList.append(stockInfo1)
         stockInfoList.append(stockInfo2)
         self.stockInfoService.importStockInfo(stockInfoList)
         
-        stockInfo2.stockCode = "222222"
-        stockInfo2.stockName = "科大讯飞"
-        stockInfo2.industrialCategory = "计算机软件"
-        stockInfo2.totalMarketValue = 54563
-        stockInfo2.generalCapital = 4234
-        stockInfo2.circulationStock = 5234
+        stockInfo2.setStockCode("222222")
+        stockInfo2.setStockName("科大讯飞")
+        stockInfo2.setIndustrialCategory("计算机软件")
+        stockInfo2.setTotalMarketValue(54563)
+        stockInfo2.setGeneralCapital(4234)
+        stockInfo2.setCirculationStock(5234)
         self.stockInfoService.updateStockInfo(stockInfo2)
         
         

@@ -7,7 +7,7 @@ from winstock.dao import StockInfoDao
 from winstock.model import StockInfo
 import logging
 import logging.config
-
+import csv
 
 class MainFrame(tk.Frame):
     def __init__(self, master=None):
@@ -17,6 +17,7 @@ class MainFrame(tk.Frame):
         self.logger = logging.getLogger("winstock.gui.MainFrame")
         
         tk.Frame.__init__(self, master)
+        master.title("winstock v0.1")
         self.pack()
         self.createWidgets() 
         
@@ -44,14 +45,6 @@ class UploadStockInfoFrame(tk.Frame):
         self.pack(fill='both', expand='yes')
         self.createWidgets()
 
-        
-        #get connection
-        propUtils = PropertiesUtils()
-        propUtils.readResourceFile("..//resources//db.properties")
-        dbFile = propUtils.getPropertiesValue("sqlite3", "database_file")
-        dbUtils = Sqlite3DbUtils(dbFile)
-        self.conn = dbUtils.getConnection()
-
     def createWidgets(self):
         # put a button widget on child frame f1 on page1
         #self.btn1 = tk.Button(self, text='button1')
@@ -60,32 +53,31 @@ class UploadStockInfoFrame(tk.Frame):
         self.label1 = tk.Label(self, text="导入股票基本信息:")
         
         self.contents1 = StringVar()
-        self.contents1.set("input file")
-        self.entry1 = tk.Entry(self, textvariable = self.contents1)
+        self.contents1.set("..//input//allstock.csv")
+        self.entry1 = tk.Entry(self, textvariable = self.contents1, width = 50)
         self.button1 = tk.Button(self, text="选择文件")
         self.button1["command"] = lambda: self.selectFile(fileFlag = 0)
         self.buttonUploadStockInfo = tk.Button(self, text="upload")
         self.buttonUploadStockInfo["command"] = self.uploadStockInfo
         
-        self.label1.grid(row = 0, padx = 5, pady = 5, sticky=W)
+        self.label1.grid(row = 0, sticky=E, pady = 5)
         self.entry1.grid(row = 0, column = 1, padx = 5)
         self.button1.grid(row = 0, column = 2, padx = 5)
-        self.buttonUploadStockInfo.grid(row = 0, column=3, padx = 5)
-        
+        self.buttonUploadStockInfo.grid(row = 0, column=3)
         
         self.label2 = tk.Label(self, text="导入股票交易信息:")
         self.contents2 = StringVar()
         self.contents2.set("input file")
-        self.entry2 = tk.Entry(self, textvariable = self.contents2)
+        self.entry2 = tk.Entry(self, textvariable = self.contents2, width = 50)
         self.button2 = tk.Button(self, text="选择文件")
         self.button2["command"] = lambda: self.selectFile(fileFlag = 1)
         self.buttonUploadTradeInfo = tk.Button(self, text="upload")
         
         
-        self.label2.grid(row = 1, padx = 5, pady = 5, sticky=W)
+        self.label2.grid(row = 1, sticky=E, pady = 5)
         self.entry2.grid(row = 1, column = 1, padx = 5)
         self.button2.grid(row = 1, column = 2, padx = 5)
-        self.buttonUploadTradeInfo.grid(row = 1, column = 3, padx = 5)
+        self.buttonUploadTradeInfo.grid(row = 1, column = 3)
         
     def selectFile(self, fileFlag=None):
         fileName = tk.filedialog.askopenfilename(filetypes=[("csv", "*.csv"), ("All", "*.*")])
@@ -97,19 +89,41 @@ class UploadStockInfoFrame(tk.Frame):
             self.entry2["textvariable"] = self.contents2
     
     def uploadStockInfo(self):
-        stockInfoService = StockInfoService(self.conn)
         
-        csvFileUtils = CsvFileUtils()
+        #get connection
+        propUtils = PropertiesUtils()
+        propUtils.readResourceFile("..//resources//db.properties")
+        dbFile = propUtils.getPropertiesValue("sqlite3", "database_file")
+        dbUtils = Sqlite3DbUtils(dbFile)
+        conn = dbUtils.getConnection()
+        
+        stockInfoService = StockInfoService(conn)
+        
         stockInfoList = []
         self.logger.debug("csv file:" + self.contents1.get())
-        dataList = csvFileUtils.readCsvFile(self.contents1.get())
-        self.logger.debug(dataList)
-        for data in dataList:
-            self.logger.debug(data)
-            
+        csvFileName = self.contents1.get()
+        
+        with open(csvFileName, newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            try:
+                for row in reader:
+                    stockInfo = StockInfo()
+                    stockInfo.setStockCode(row[0])
+                    stockInfo.setStockName(row[1])
+                    stockInfo.setIndustrialCategory(row[2])
+                    stockInfo.setTotalMarketValue(row[3])
+                    stockInfo.setGeneralCapital(row[4])
+                    stockInfo.setCirculationStock(row[5])
+                    
+                    self.logger.debug(stockInfo.toString())
+                    stockInfoList.append(stockInfo)
+            except csv.Error as e:
+                self.logger.error(e)
+                sys.exit('file {}, line {}: {}'.format(csvFileName, reader.line_num, e))
+
         stockInfoService.importStockInfo(stockInfoList)
         
-        #self.conn.close()
+        conn.close()
                     
 class TwoFrame(tk.Frame):
     def __init__(self, master=None):
@@ -135,6 +149,6 @@ class ThreeFrame(tk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry('800x600+400+200')
+    #root.geometry('800x600+400+200')
     app = MainFrame(master=root)
     app.mainloop()

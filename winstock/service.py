@@ -18,7 +18,7 @@ class StockInfoService(object):
         try:
             for stockInfo in stockInfoList:
                 
-                count = self.stockInfoDao.getCountByKey(stockInfo.stockCode)
+                count = self.stockInfoDao.getCountByKey(stockInfo.getStockCode())
                 
                 if count == 0:
                     self.logger.info("insert")

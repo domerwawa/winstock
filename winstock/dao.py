@@ -28,12 +28,12 @@ class StockInfoDao(object):
                         insert_time,
                         update_time) values (?, ?, ?, ?, ?, ?, ? ,?)
                         ''', 
-                        [stockInfo.stockCode,
-                        stockInfo.stockName,
-                        stockInfo.industrialCategory,
-                        stockInfo.totalMarketValue,
-                        stockInfo.generalCapital,
-                        stockInfo.circulationStock,
+                        [stockInfo.getStockCode(),
+                        stockInfo.getStockName(),
+                        stockInfo.getIndustrialCategory(),
+                        stockInfo.getTotalMarketValue(),
+                        stockInfo.getGeneralCapital(),
+                        stockInfo.getCirculationStock(),
                         datetime.now(),
                         datetime.now()]
                        )
@@ -47,13 +47,13 @@ class StockInfoDao(object):
                         circulation_stock = ?,
                         update_time = ?
                         where stock_code = ? ''', 
-                        [stockInfo.stockName,
-                         stockInfo.industrialCategory,
-                         stockInfo.totalMarketValue,
-                         stockInfo.generalCapital,
-                         stockInfo.circulationStock,
+                        [stockInfo.getStockName(),
+                         stockInfo.getIndustrialCategory(),
+                         stockInfo.getTotalMarketValue(),
+                         stockInfo.getGeneralCapital(),
+                         stockInfo.getCirculationStock(),
                          datetime.now(),
-                         stockInfo.stockCode]
+                         stockInfo.getStockCode()]
                         )
     
     
