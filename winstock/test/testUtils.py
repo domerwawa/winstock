@@ -5,11 +5,13 @@ Created on 2016年1月5日
 '''
 import unittest
 from winstock import utils
+import os
 
 class Test(unittest.TestCase):
 
 
     def setUp(self):
+        os.chdir("../")
         self.propUtils = utils.PropertiesUtils()
 
     def tearDown(self):
@@ -17,8 +19,8 @@ class Test(unittest.TestCase):
 
 
     def testPropertiesUtils(self):
-        self.propUtils.readResourceFile("//resources//db.properties")
-        self.assertEqual("winstock", self.propUtils.getPropertiesValue("sqlite3", "db"))
+        self.propUtils.readResourceFile("../resources/db.properties")
+        self.assertEqual("../sqlite3/winstock.db", self.propUtils.getPropertiesValue("sqlite3", "database_file"))
 
 
 if __name__ == "__main__":
