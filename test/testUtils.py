@@ -4,15 +4,14 @@ Created on 2016年1月5日
 @author: Administrator
 '''
 import unittest
-from winstock import utils
+import winstock
 import os
 
 class Test(unittest.TestCase):
 
 
     def setUp(self):
-        os.chdir("../")
-        self.propUtils = utils.PropertiesUtils()
+        self.propUtils = winstock.PropUtils()
 
     def tearDown(self):
         pass

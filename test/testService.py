@@ -5,11 +5,7 @@ Created on 2016年1月7日
 '''
 import unittest
 import os
-from winstock.utils import PropertiesUtils, Sqlite3DbUtils
-from winstock.model import StockInfo
-from winstock.service import StockInfoService
-from winstock.model import StockPrice
-from winstock.service import StockPriceService
+import winstock
 import logging
 import logging.config
 
@@ -18,23 +14,22 @@ class TestService(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         
-        os.chdir("../")
         #get logger
         logging.config.fileConfig(fname = os.path.realpath("../resources/pylogconfig.ini"))
         
         cls.logger = logging.getLogger("winstock.test.testService")
         
         #get connection
-        propUtils = PropertiesUtils()
+        propUtils = winstock.PropUtils()
         propUtils.readResourceFile("../resources/db.properties")
         dbFile = propUtils.getPropertiesValue("sqlite3", "database_file")
-        dbUtils = Sqlite3DbUtils()
+        dbUtils = winstock.Sqlite3DbUtils()
         dbUtils.readDbFile(dbFile)
         cls.conn = dbUtils.getConnection()
         
         #get service
-        cls.stockInfoService = StockInfoService(cls.conn)
-        cls.stockPriceService = StockPriceService(cls.conn)
+        cls.stockInfoService = winstock.StockInfoService(cls.conn)
+        cls.stockPriceService = winstock.StockPriceService(cls.conn)
     
     @classmethod
     def tearDownClass(cls):
@@ -43,7 +38,7 @@ class TestService(unittest.TestCase):
 
     def testStockInfoService(self):
         self.logger.info("testStockInfoService start")
-        stockInfo1 = StockInfo()
+        stockInfo1 = winstock.StockInfo()
         stockInfo1.setStockCode("111111")
         stockInfo1.setStockName("远光软件")
         stockInfo1.setIndustrialCategory("计算机软件")
@@ -51,7 +46,7 @@ class TestService(unittest.TestCase):
         stockInfo1.setGeneralCapital(421213)
         stockInfo1.setCirculationStock(5232)
         
-        stockInfo2 = StockInfo()
+        stockInfo2 = winstock.StockInfo()
         stockInfo2.setStockCode("222222")
         stockInfo2.setStockName("科大讯飞")
         stockInfo2.setIndustrialCategory("计算机软件")
@@ -81,7 +76,7 @@ class TestService(unittest.TestCase):
         
     def testStockPriceService(self):
         self.logger.info("testStockPriceService start")
-        stockPrice1 = StockPrice()
+        stockPrice1 = winstock.StockPrice()
         stockPrice1.setStockCode("111111")
         stockPrice1.setTradDate("2010-01-01")
         stockPrice1.setPeriod(1)
@@ -92,7 +87,7 @@ class TestService(unittest.TestCase):
         stockPrice1.setVolume(45345)
         stockPrice1.setAdjClose(345.73)
         
-        stockPrice2 = StockPrice()
+        stockPrice2 = winstock.StockPrice()
         stockPrice2.setStockCode("111111")
         stockPrice2.setTradDate("2010-01-02")
         stockPrice2.setPeriod(1)
@@ -122,7 +117,7 @@ class TestService(unittest.TestCase):
         self.assertEqual(len(self.stockPriceService.getAllStockPrice()), 2)
         
         
-        stockPrice3 = StockPrice()
+        stockPrice3 = winstock.StockPrice()
         stockPrice3.setStockCode("111111")
         stockPrice3.setTradDate("2010-01-01")
         stockPrice3.setPeriod(1)
