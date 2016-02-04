@@ -1,10 +1,12 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.filedialog import *
-from winstock.service import StockInfoService
-from winstock.utils import PropertiesUtils, Sqlite3DbUtils, CsvFileUtils
-from winstock.dao import StockInfoDao
-from winstock.model import StockInfo
+from winstock.service.stockInfoService import StockInfoService
+from winstock.utils.propUtils import PropUtils
+from winstock.utils.sqlite3DbUtils import Sqlite3DbUtils
+from winstock.utils.csvFileUtils import CsvFileUtils
+from winstock.dao.stockInfoDao import StockInfoDao
+from winstock.entity.stockInfo import StockInfo
 import logging
 import logging.config
 import csv
@@ -53,7 +55,7 @@ class UploadStockInfoFrame(tk.Frame):
         self.label1 = tk.Label(self, text="导入股票基本信息:")
         
         self.contents1 = StringVar()
-        self.contents1.set("..//input//allstock.csv")
+        self.contents1.set("../input/allstock.csv")
         self.entry1 = tk.Entry(self, textvariable = self.contents1, width = 50)
         self.button1 = tk.Button(self, text="选择文件")
         self.button1["command"] = lambda: self.selectFile(fileFlag = 0)
@@ -91,10 +93,11 @@ class UploadStockInfoFrame(tk.Frame):
     def uploadStockInfo(self):
         
         #get connection
-        propUtils = PropertiesUtils()
-        propUtils.readResourceFile("..//resources//db.properties")
+        propUtils = PropUtils()
+        propUtils.readResourceFile("../resources/db.properties")
         dbFile = propUtils.getPropertiesValue("sqlite3", "database_file")
-        dbUtils = Sqlite3DbUtils(dbFile)
+        dbUtils = Sqlite3DbUtils()
+        dbUtils.readDbFile(dbFile)
         conn = dbUtils.getConnection()
         
         stockInfoService = StockInfoService(conn)
