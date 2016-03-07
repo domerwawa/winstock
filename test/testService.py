@@ -30,7 +30,8 @@ class TestService(unittest.TestCase):
         #get service
         cls.stockInfoService = winstock.StockInfoService(cls.conn)
         cls.stockPriceService = winstock.StockPriceService(cls.conn)
-    
+        cls.stockRehabilitationPriceService = winstock.StockRehabilitationPriceService(cls.conn)
+        
     @classmethod
     def tearDownClass(cls):
         cls.conn.close()
@@ -126,6 +127,56 @@ class TestService(unittest.TestCase):
         self.stockPriceService.deleteStockPriceByKey(stockPrice3)
         
         self.logger.info("testStockPriceService end")
+    
+    def testStockRehabilitationPriceService(self):
+        self.logger.info("testStockRehabilitationPriceService start")
+        srp1 = winstock.StockRehabilitationPrice()
+        srp1.setStockCode("111111")
+        srp1.setTradDate("2010-01-01")
+        srp1.setOpen(35.34)
+        srp1.setHigh(743.5)
+        srp1.setLow(74.234)
+        srp1.setClose(73.23)
+        srp1.setVolume(45345)
+        srp1.setAmount(345.73)
+        
+        srp2 = winstock.StockRehabilitationPrice()
+        srp2.setStockCode("111111")
+        srp2.setTradDate("2010-01-02")
+        srp2.setOpen(95.23)
+        srp2.setHigh(523.63)
+        srp2.setLow(52.63)
+        srp2.setClose(44.22)
+        srp2.setVolume(7545)
+        srp2.setAmount(35.345)
+
+        srpList = []
+        srpList.append(srp1)
+        srpList.append(srp2)
+        self.stockRehabilitationPriceService.importStockRehabilitationPrice(srpList)
+        
+        srp2.setStockCode("111111")
+        srp2.setTradDate("2010-01-02")
+        srp2.setOpen(222)
+        srp2.setHigh(333)
+        srp2.setLow(444)
+        srp2.setClose(555)
+        srp2.setVolume(666)
+        srp2.setAmount(777)
+        self.stockRehabilitationPriceService.updateStockRehabilitationPrice(srp2)
+        
+        self.assertEqual(len(self.stockRehabilitationPriceService.getAllstockRehabilitationPrice()), 2)
+        
+        
+        srp3 = winstock.StockRehabilitationPrice()
+        srp3.setStockCode("111111")
+        srp3.setTradDate("2010-01-01")
+        self.stockRehabilitationPriceService.deleteStockRehabilitationPriceByKey(srp3)
+        srp3.setTradDate("2010-01-02")
+        self.stockRehabilitationPriceService.deleteStockRehabilitationPriceByKey(srp3)
+        
+        self.logger.info("testStockRehabilitationPriceService end")
+
     
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

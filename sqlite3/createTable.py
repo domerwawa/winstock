@@ -33,7 +33,7 @@ except sqlite3.OperationalError as er:
 # Save (commit) the changes
 conn.commit()
 
-c.execute("DROP TABLE stock_price")
+#c.execute("DROP TABLE stock_price")
 try:
     c.execute('''CREATE TABLE stock_price
                 (
@@ -61,6 +61,35 @@ try:
 except sqlite3.OperationalError as er:
     print("create table stock_price error")
 conn.commit()
+
+#c.execute("DROP TABLE stock_rehabilitation_price")
+try:
+    c.execute('''CREATE TABLE stock_rehabilitation_price
+                (
+                  stock_code text,
+                  --交易日期
+                  trade_date date,
+                  --开盘价
+                  open decimal(15,3),
+                  --最高价
+                  high decimal(15,3),
+                  --最低价
+                  low decimal(15,3),
+                  --收盘价
+                  close decimal(15,3),
+                  --成交量
+                  volume decimal(15,0),
+                  --成交金额
+                  amount decimal(15,3),
+                  insert_time datetime,
+                  update_time datetime,
+                  primary key(stock_code, trade_date)
+                )''')
+except sqlite3.OperationalError as er:
+    print("create table stock_rehabilitation_price error")
+conn.commit()
+
+
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.
 conn.close()

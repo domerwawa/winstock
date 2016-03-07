@@ -15,6 +15,9 @@ for row in c.execute("select * from stock_info"):
 for row in c.execute("select * from stock_price"):
     print(row)
 
+for row in c.execute("select * from stock_rehabilitation_price"):
+    print(row)
+
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.
 conn.close()

@@ -424,8 +424,16 @@ if __name__ == '__main__':
     td = TradeData()
     #df1 = td.getHistoryData("600011")
     #print (df1)
-    df2 = td.getRehabilitationData("601633", start = "2014-01-01", autype='qfq')
-    print (df2)
+    df2 = td.getRehabilitationData("601633", start = "2016-03-04", autype='qfq')
+    #print(df2)
+    #print(df2.columns)
+    #print(df2.values)
+    for ind in df2.index:
+        print(str(ind.year) + "-" + str(ind.month) + "-" + str(ind.day), df2.get_value(ind, 'open'), df2.get_value(ind, 'high'), 
+              df2.get_value(ind, 'low'), df2.get_value(ind, 'close'))
+    
+    
+    
     #df3 = td.get_realtime_quotes("601633")
     #print (df3)
     #df4 = td.get_today_all()
